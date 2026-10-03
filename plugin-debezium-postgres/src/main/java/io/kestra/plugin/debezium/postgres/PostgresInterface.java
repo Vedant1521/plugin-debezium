@@ -1,10 +1,10 @@
 package io.kestra.plugin.debezium.postgres;
 
+import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import io.kestra.core.models.annotations.PluginProperty;
 
 public interface PostgresInterface {
     @Schema(
@@ -34,9 +34,9 @@ public interface PostgresInterface {
             "create this publication, so it is usually preferable to create the publication before starting the connector for the first time.\n" +
             "\n" +
             "If the publication already exists, either for all tables or configured with a subset of tables, Debezium " +
-            "uses the publication as it is defined."
+            "uses the publication as it is defined.\n\n" +
+            "When omitted, the plugin derives a stable default from the connector identity (`kestra_pub_<hash>`)."
     )
-    @NotNull
     @PluginProperty(group = "main")
     Property<String> getPublicationName();
 
@@ -45,9 +45,10 @@ public interface PostgresInterface {
         description = "The server uses this slot to stream events to the Debezium connector that you are configuring.\n" +
             "Slot names must conform to [PostgreSQL replication slot naming rules](https://www.postgresql.org/docs/current/static/warm-standby.html#STREAMING-REPLICATION-SLOTS-MANIPULATION), "
             +
-            "which state: \"Each replication slot has a name, which can contain lower-case letters, numbers, and the underscore character.\""
+            "which state: \"Each replication slot has a name, which can contain lower-case letters, numbers, and the underscore character.\"\n\n" +
+            "When omitted, the plugin derives a stable default from the connector identity (`kestra_<hash>`). " +
+            "If existing legacy state is detected, the legacy default `kestra` is preserved for backward compatibility."
     )
-    @NotNull
     @PluginProperty(group = "main")
     Property<String> getSlotName();
 
